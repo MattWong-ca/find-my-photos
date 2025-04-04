@@ -14,7 +14,7 @@ export default function Home() {
             <span className="text-xl font-bold">FindMyPhotos.app</span>
           </Link>
           <nav className="flex items-center space-x-4 text-sm font-medium">
-            <Link href="#events" className="transition-colors hover:text-foreground/80">
+            <Link href="/events" className="transition-colors hover:text-foreground/80">
               Events
             </Link>
             <Button variant="outline">Connect Wallet</Button>
@@ -132,7 +132,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold">3. Share photos!</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Download, share, or save your photos directly to your wallet.
+                  Download, share, or save your photos directly!
                 </p>
               </div>
             </div>
