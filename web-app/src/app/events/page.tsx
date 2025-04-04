@@ -5,7 +5,7 @@ import { Navbar } from "../../components/Navbar"
 
 const events = [
   { id: 1, name: "ETHGlobal Bangkok", year: "2024", slug: "bangkok-2024" },
-  { id: 2, name: "ETHGlobal San Francisco", year: "2024", slug: "sanfrancisco-2024" },
+  { id: 2, name: "ETHGlobal SF", year: "2024", slug: "sf-2024" },
   { id: 3, name: "ETHGlobal Singapore", year: "2024", slug: "singapore-2024" },
   { id: 4, name: "ETHGlobal Brussels", year: "2024", slug: "brussels-2024" },
   { id: 5, name: "ETHGlobal Sydney", year: "2024", slug: "sydney-2024" }

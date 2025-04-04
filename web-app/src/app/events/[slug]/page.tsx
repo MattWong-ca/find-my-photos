@@ -7,18 +7,20 @@ import { Navbar } from "@/components/Navbar"
 
 export default function EventPage() {
   const params = useParams()
-  const [eventSlug, setEventSlug] = useState<string>('')
+  const [eventName, setEventName] = useState('')
+  const [eventYear, setEventYear] = useState('')
 
   useEffect(() => {
-    // params.slug will be available here
     if (params?.slug) {
-      setEventSlug(params.slug as string)
+      const [city, year] = (params.slug as string).split('-')
+      setEventName(city.toLowerCase() === 'sf' ? 'SF' : city.charAt(0).toUpperCase() + city.slice(1))
+      setEventYear(year)
     }
   }, [params])
 
   const handleFindPhotos = () => {
     // Now you can use eventSlug when needed
-    console.log(`Finding photos for event: ${eventSlug}`)
+    console.log(`Finding photos for event: ${eventName} ${eventYear}`)
   }
 
   return (
@@ -30,7 +32,7 @@ export default function EventPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Find Your Photos</h1>
             <p className="text-gray-600 mb-8">
-              Upload your photo to find yourself in pictures from {eventSlug}
+              Upload your photo to find yourself in pictures from ETHGlobal {eventName} {eventYear}
             </p>
             
             <div className="space-y-6">
