@@ -4,6 +4,37 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, Search } from "lucide-react"
 
+const EVENTS = [
+  {
+    id: 1,
+    name: "ETHGlobal Bangkok",
+    year: "2024",
+    slug: "bangkok-2024",
+    image: "https://i.ytimg.com/vi/WYS4V181S7g/maxresdefault.jpg"
+  },
+  {
+    id: 2,
+    name: "ETHGlobal San Francisco",
+    year: "2024",
+    slug: "sf-2024",
+    image: "https://i.imgur.com/0KddMdj.jpeg"
+  },
+  {
+    id: 3,
+    name: "ETHGlobal Singapore",
+    year: "2024",
+    slug: "singapore-2024",
+    image: "https://i.ytimg.com/vi/zwwyBTOO-NM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA3MmJmGXVxlV5i1eivhTrcDPDeKw"
+  },
+  {
+    id: 4,
+    name: "ETHGlobal Brussels",
+    year: "2024",
+    slug: "brussels-2024",
+    image: "https://miro.medium.com/v2/resize:fit:1600/1*31T3DlAEZumtGqX06wccRg.jpeg"
+  }
+];
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
@@ -35,9 +66,11 @@ export default function Home() {
                   ⚡Instantly find photos you&apos;re in from ETHGlobal events using AI facial recognition tech
                 </p>
                 <div>
-                  <Button size="lg" className="mt-4">
-                    Try Now
-                  </Button>
+                  <Link href="/events">
+                    <Button size="lg" className="mt-4">
+                      Try Now
+                    </Button>
+                  </Link>
                 </div>
               </div>
               <div className="flex justify-center lg:justify-end">
@@ -66,26 +99,24 @@ export default function Home() {
               </p>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-4">
-              {[1, 2, 3, 4].map((i) => (
-                <Card key={i} className="overflow-hidden">
-                  <div className="aspect-video w-full">
-                    <Image
-                      src={`/placeholder.svg?height=200&width=300`}
-                      alt={`Event ${i}`}
-                      width={300}
-                      height={200}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold">
-                      ETHGlobal {i === 1 ? "London" : i === 2 ? "Paris" : i === 3 ? "New York" : "Tokyo"}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {i === 1 ? "2023" : i === 2 ? "2022" : i === 3 ? "2023" : "2022"}
-                    </p>
-                  </CardContent>
-                </Card>
+              {EVENTS.map((event) => (
+                <Link href={`/events/${event.slug}`} key={event.id}>
+                  <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video w-full">
+                      <Image
+                        src={event.image}
+                        alt={event.name}
+                        width={300}
+                        height={200}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold">{event.name}</h3>
+                      <p className="text-sm text-gray-500">{event.year}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
@@ -251,7 +282,9 @@ export default function Home() {
                       </li>
                     </ul>
                   </div>
-                  <Button className="mt-6">Get Started</Button>
+                  <Link href="/events">
+                    <Button className="mt-6">Get Started</Button>
+                  </Link>
                 </CardContent>
               </Card>
               <Card className="flex flex-col border-primary">
@@ -314,9 +347,11 @@ export default function Home() {
                       </li>
                     </ul>
                   </div>
-                  <Button className="mt-6" variant="default">
-                    Try Now
-                  </Button>
+                  <Link href="/events">
+                    <Button className="mt-6" variant="default">
+                      Try Now
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </div>
