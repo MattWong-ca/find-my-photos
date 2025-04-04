@@ -2,14 +2,14 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Upload, Search, Share } from "lucide-react"
+import { Upload, Search } from "lucide-react"
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Navbar */}
       <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="flex h-16 items-center justify-between">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold">FindMyPhotos.app</span>
           </Link>
@@ -25,14 +25,14 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="px-4 md:px-6">
+          <div className="container mx-auto px-4">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <div className="flex flex-col justify-center space-y-4 text-left">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
                   FindMyPhotos.app
                 </h1>
                 <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Instantly find photos you&apos;re in from any event using facial recognition technology.
+                  ⚡Instantly find photos you&apos;re in from ETHGlobal events using AI facial recognition tech
                 </p>
                 <div>
                   <Button size="lg" className="mt-4">
@@ -62,7 +62,7 @@ export default function Home() {
                 Find your photos from ETHGlobal events
               </h2>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Access all your memories from blockchain events in one place.
+                Access all your memories in one place.
               </p>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-4">
@@ -97,7 +97,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">How it works</h2>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Three simple steps to find all your photos.
+                3 simple steps to find all your photos.
               </p>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-3">
@@ -121,7 +121,14 @@ export default function Home() {
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <Share className="h-8 w-8 text-primary" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-8 w-8 text-primary"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
                 </div>
                 <h3 className="text-xl font-bold">3. Share photos!</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -187,9 +194,9 @@ export default function Home() {
               <Card className="flex flex-col">
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
-                    <h3 className="text-2xl font-bold">Basic</h3>
-                    <div className="mt-4 text-4xl font-bold">Free</div>
-                    <p className="mt-2 text-gray-500 dark:text-gray-400">For casual event attendees</p>
+                    <h3 className="text-2xl font-bold">Normies</h3>
+                    <div className="mt-4 text-4xl font-bold">$420.69</div>
+                    <p className="mt-2 text-gray-500 dark:text-gray-400">Those who&apos;ve never been</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
                         <svg
@@ -206,7 +213,7 @@ export default function Home() {
                         >
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
-                        <span>Find up to 10 photos per event</span>
+                        <span>One time use</span>
                       </li>
                       <li className="flex items-center">
                         <svg
@@ -250,9 +257,9 @@ export default function Home() {
               <Card className="flex flex-col border-primary">
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
-                    <h3 className="text-2xl font-bold">Premium</h3>
-                    <div className="mt-4 text-4xl font-bold">$9.99</div>
-                    <p className="mt-2 text-gray-500 dark:text-gray-400">For frequent event attendees</p>
+                    <h3 className="text-2xl font-bold">ETHGlobal Pack Holders</h3>
+                    <div className="mt-4 text-4xl font-bold">FREE</div>
+                    <p className="mt-2 text-gray-500 dark:text-gray-400">Any past ETHGlobal event attendee</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
                         <svg
@@ -269,7 +276,7 @@ export default function Home() {
                         >
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
-                        <span>Unlimited photos per event</span>
+                        <span>Hackers, Judges, Partners, Volunteers, Mentors</span>
                       </li>
                       <li className="flex items-center">
                         <svg
@@ -305,44 +312,10 @@ export default function Home() {
                         </svg>
                         <span>Advanced sharing options</span>
                       </li>
-                      <li className="flex items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="mr-2 h-4 w-4 text-primary"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Direct wallet integration</span>
-                      </li>
-                      <li className="flex items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="mr-2 h-4 w-4 text-primary"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Priority processing</span>
-                      </li>
                     </ul>
                   </div>
                   <Button className="mt-6" variant="default">
-                    Subscribe Now
+                    Try Now
                   </Button>
                 </CardContent>
               </Card>
@@ -355,7 +328,7 @@ export default function Home() {
       <footer className="w-full border-t py-6">
         <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
           <p className="text-center text-sm leading-loose text-gray-500 md:text-left">
-            © 2023 FindMyPhotos.app. All rights reserved.
+            © 2025 FindMyPhotos.app. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link href="#" className="text-sm text-gray-500 hover:underline">
