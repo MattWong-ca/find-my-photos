@@ -1,8 +1,12 @@
+'use client'
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, Search } from "lucide-react"
+import { BrowserProvider } from "ethers"
 
 const EVENTS = [
   {
@@ -35,7 +39,92 @@ const EVENTS = [
   }
 ];
 
+const NETWORK_CONFIG = {
+  // Sepolia
+  "0xaa36a7": {
+    name: "Sepolia",
+    symbol: "ETH",
+    normalPrice: "1000000000000000000", // 1 ETH
+    discountPrice: "10000000000000000",  // 0.01 ETH
+    contractAddress: "0x16C31f51D2648f5942DeC7d779369aA09A72d827"
+  },
+    // Flow EVM Testnet
+    "0x221": {
+      name: "Flow EVM Testnet",
+      symbol: "FLOW",
+      normalPrice: "1000000000000000000",
+      discountPrice: "10000000000000000",
+      contractAddress: "0x8a204761fFb6eDD676eC28849De46D5e59F87fE1"
+    },
+  // Polygon Amoy
+  "0x13882": {
+    name: "Polygon Amoy",
+    symbol: "POL",
+    normalPrice: "1000000000000000000",
+    discountPrice: "10000000000000000",
+    contractAddress: "0xfF70C3ae45022AE728b62c90d0c14D526560e9Cf"
+  },
+  // Zircuit Garfield
+  "0xbf02": {
+    name: "Zircuit Garfield",
+    symbol: "ETH",
+    normalPrice: "1000000000000000000",
+    discountPrice: "10000000000000000",
+    contractAddress: "0xb861d6d79123ADa308E5F4030F458b402E2D131A"
+  },
+    // Base Sepolia
+    "0x14a34": {
+      name: "Base Sepolia",
+      symbol: "ETH",
+      normalPrice: "1000000000000000000",
+      discountPrice: "10000000000000000",
+      contractAddress: "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e"
+    }
+}
+
 export default function Home() {
+  const [networkConfig, setNetworkConfig] = useState<typeof NETWORK_CONFIG["0xaa36a7"] | null>(null)
+
+  useEffect(() => {
+    const checkNetwork = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new BrowserProvider(window.ethereum)
+        try {
+          const network = await provider.getNetwork()
+          const chainId = "0x" + network.chainId.toString(16)
+          const config = NETWORK_CONFIG[chainId as keyof typeof NETWORK_CONFIG]
+          
+          if (config) {
+            setNetworkConfig(config)
+          }
+        } catch (error) {
+          console.error('Error checking network:', error)
+        }
+      }
+    }
+
+    checkNetwork()
+
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload()
+      })
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('chainChanged', () => {})
+      }
+    }
+  }, [])
+
+  const getPriceDisplay = (isDiscounted: boolean) => {
+    if (networkConfig) {
+      return `${isDiscounted ? '0.01' : '1'} ${networkConfig.symbol}`
+    }
+    return isDiscounted ? '0.01 ETH' : '1 ETH'
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
 
@@ -124,7 +213,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold">1. Upload your image</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Upload a clear selfie or profile picture to help us identify you.
+                  Upload a profile picture or take a live photo to help us identify you.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
@@ -212,7 +301,7 @@ export default function Home() {
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <h3 className="text-2xl font-bold">Normies</h3>
-                    <div className="mt-4 text-4xl font-bold">1 ETH</div>
+                    <div className="mt-4 text-4xl font-bold">{getPriceDisplay(false)}</div>
                     <p className="mt-2 text-gray-500 dark:text-gray-400">Those who&apos;ve never been</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
@@ -277,7 +366,7 @@ export default function Home() {
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <h3 className="text-2xl font-bold">ETHGlobal Pack Holders</h3>
-                    <div className="mt-4 text-4xl font-bold">0.01 ETH</div>
+                    <div className="mt-4 text-4xl font-bold">{getPriceDisplay(true)}</div>
                     <p className="mt-2 text-gray-500 dark:text-gray-400">Any past ETHGlobal event attendee</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
