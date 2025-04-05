@@ -4,11 +4,41 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Navbar } from "../../components/Navbar"
 
 const events = [
-  { id: 1, name: "ETHGlobal Bangkok", year: "2024", slug: "bangkok-2024" },
-  { id: 2, name: "ETHGlobal SF", year: "2024", slug: "sf-2024" },
-  { id: 3, name: "ETHGlobal Singapore", year: "2024", slug: "singapore-2024" },
-  { id: 4, name: "ETHGlobal Brussels", year: "2024", slug: "brussels-2024" },
-  { id: 5, name: "ETHGlobal Sydney", year: "2024", slug: "sydney-2024" }
+  { 
+    id: 1, 
+    name: "ETHGlobal Bangkok", 
+    year: "2024", 
+    slug: "bangkok-2024",
+    image: "https://i.ytimg.com/vi/WYS4V181S7g/maxresdefault.jpg"
+  },
+  { 
+    id: 2, 
+    name: "ETHGlobal SF", 
+    year: "2024", 
+    slug: "sf-2024",
+    image: "https://i.imgur.com/0KddMdj.jpeg"
+  },
+  { 
+    id: 3, 
+    name: "ETHGlobal Singapore", 
+    year: "2024", 
+    slug: "singapore-2024",
+    image: "https://i.ytimg.com/vi/zwwyBTOO-NM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA3MmJmGXVxlV5i1eivhTrcDPDeKw"
+  },
+  { 
+    id: 4, 
+    name: "ETHGlobal Brussels", 
+    year: "2024", 
+    slug: "brussels-2024",
+    image: "https://miro.medium.com/v2/resize:fit:1600/1*31T3DlAEZumtGqX06wccRg.jpeg"
+  },
+  { 
+    id: 5, 
+    name: "ETHGlobal Sydney", 
+    year: "2024", 
+    slug: "sydney-2024",
+    image: "https://i.ytimg.com/vi/WYS4V181S7g/maxresdefault.jpg"
+  }
 ]
 
 export default function EventsPage() {
@@ -25,7 +55,7 @@ export default function EventsPage() {
                 <Card className="overflow-hidden transition-transform hover:scale-[1.02]">
                   <div className="aspect-video w-full">
                     <Image
-                      src={`/placeholder.svg?height=200&width=300`}
+                      src={event.image}
                       alt={event.name}
                       width={300}
                       height={200}
