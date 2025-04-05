@@ -9,8 +9,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Camera, Upload, Loader2, Download } from "lucide-react"
 import Webcam from "react-webcam"
 
-// const CONTRACT_ADDRESS = "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e" // "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
-const CONTRACT_ADDRESS = "0x16C31f51D2648f5942DeC7d779369aA09A72d827"
+// Network specific configurations
+const NETWORK_CONFIG = {
+  // Sepolia
+  "0xaa36a7": {
+    name: "Sepolia",
+    symbol: "ETH",
+    normalPrice: "1000000000000000000", // 1 ETH
+    discountPrice: "10000000000000000",  // 0.01 ETH
+    contractAddress: "0x16C31f51D2648f5942DeC7d779369aA09A72d827"
+  },
+    // Flow EVM Testnet
+    "0x221": {
+      name: "Flow EVM Testnet",
+      symbol: "FLOW",
+      normalPrice: "1000000000000000000",
+      discountPrice: "10000000000000000",
+      contractAddress: "0x8a204761fFb6eDD676eC28849De46D5e59F87fE1"
+    },
+  // Polygon Amoy
+  "0x13882": {
+    name: "Polygon Amoy",
+    symbol: "POL",
+    normalPrice: "1000000000000000000",
+    discountPrice: "10000000000000000",
+    contractAddress: "0xfF70C3ae45022AE728b62c90d0c14D526560e9Cf"
+  },
+  // Zircuit Garfield
+  "0xbf02": {
+    name: "Zircuit Garfield",
+    symbol: "ETH",
+    normalPrice: "1000000000000000000",
+    discountPrice: "10000000000000000",
+    contractAddress: "0xb861d6d79123ADa308E5F4030F458b402E2D131A"
+  },
+    // Base Sepolia
+    "0x14a34": {
+      name: "Base Sepolia",
+      symbol: "ETH",
+      normalPrice: "1000000000000000000",
+      discountPrice: "10000000000000000",
+      contractAddress: "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e"
+    }
+}
 
 interface FaceMatch {
   Face: {
@@ -35,6 +76,7 @@ export default function EventPage() {
   const [isNFTHolder, setIsNFTHolder] = useState(false)
   const [hasPaid, setHasPaid] = useState(false)
   const webcamRef = useRef<Webcam>(null)
+  const [networkConfig, setNetworkConfig] = useState<typeof NETWORK_CONFIG["0xaa36a7"] | null>(null)
 
   const checkNFTHolder = async (address: string) => {
     try {
@@ -106,23 +148,39 @@ export default function EventPage() {
   }, [params])
 
   useEffect(() => {
-    const checkWallet = async () => {
+    const checkWalletAndNetwork = async () => {
       if (typeof window.ethereum !== 'undefined') {
         const provider = new BrowserProvider(window.ethereum)
         try {
+          const network = await provider.getNetwork()
+          const chainId = "0x" + network.chainId.toString(16)
+          const config = NETWORK_CONFIG[chainId as keyof typeof NETWORK_CONFIG]
+          
+          if (config) {
+            setNetworkConfig(config)
+          } else {
+            alert('Please switch to a supported network (Flow, Polygon, or Zircuit)')
+            setNetworkConfig(null)
+          }
+
           const signer = await provider.getSigner()
           const address = await signer.getAddress()
           await checkNFTHolder(address)
         } catch (error) {
-          console.error('No wallet connected:', error)
+          console.error('Error checking wallet/network:', error)
+          setNetworkConfig(null)
         }
       }
     }
 
-    checkWallet()
+    checkWalletAndNetwork()
 
-    // Listen for account changes
     if (window.ethereum) {
+      window.ethereum.on('chainChanged', () => {
+        // Reload page on network change
+        window.location.reload()
+      })
+      
       window.ethereum.on('accountsChanged', async (accounts: string[]) => {
         if (accounts.length > 0) {
           await checkNFTHolder(accounts[0])
@@ -133,9 +191,9 @@ export default function EventPage() {
     }
 
     return () => {
-      // Cleanup listener
       if (window.ethereum) {
-        window.ethereum.removeListener('accountsChanged', () => { })
+        window.ethereum.removeListener('chainChanged', () => {})
+        window.ethereum.removeListener('accountsChanged', () => {})
       }
     }
   }, [])
@@ -216,22 +274,24 @@ export default function EventPage() {
       return
     }
 
+    if (!networkConfig) {
+      alert('Please switch to a supported network (Flow, Polygon, or Zircuit)')
+      return
+    }
+
     setLoading(true)
     try {
       const provider = new BrowserProvider(window.ethereum)
       const signer = await provider.getSigner()
-      const contract = new Contract(CONTRACT_ADDRESS, [
+      const contract = new Contract(networkConfig.contractAddress, [
         "function payForSearch() public payable"
       ], signer)
 
-      // Make payment based on NFT holder status
+      // Make payment based on NFT holder status using network-specific pricing
       const tx = await contract.payForSearch({
-        value: isNFTHolder ?
-          BigInt("10000000000000000") // 0.01 ETH for NFT holders
-          : BigInt("1000000000000000000") // 1 ETH for non-holders
+        value: BigInt(isNFTHolder ? networkConfig.discountPrice : networkConfig.normalPrice)
       })
 
-      // Wait for payment confirmation
       await tx.wait()
       setHasPaid(true)
     } catch (error) {
@@ -293,13 +353,19 @@ export default function EventPage() {
               Upload your photo to find yourself in pictures from ETHGlobal {eventName} {eventYear}
             </p>
             <p className="text-gray-600 mb-8">
-              {isNFTHolder ? (
-                <span>
-                  <span className="line-through">1 ETH</span>{" "}
-                  <span className="text-green-600 font-bold">0.01 ETH</span> (Pack Holder Discount!)
-                </span>
+              {networkConfig ? (
+                isNFTHolder ? (
+                  <span>
+                    <span className="line-through">1 {networkConfig.symbol}</span>{" "}
+                    <span className="text-green-600 font-bold">
+                      {networkConfig.symbol === 'MATIC' ? '20' : '0.01'} {networkConfig.symbol}
+                    </span> (Pack Holder Discount!)
+                  </span>
+                ) : (
+                  <span>Price: {networkConfig.symbol === 'MATIC' ? '2000' : '1'} {networkConfig.symbol}</span>
+                )
               ) : (
-                <span>Price: 1 ETH</span>
+                <span>Please connect to a supported network</span>
               )}
             </p>
 
