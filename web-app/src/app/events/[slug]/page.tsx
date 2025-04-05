@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Navbar } from "@/components/Navbar"
+import { BrowserProvider, JsonRpcProvider, Contract } from "ethers"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Camera, Upload, Loader2 } from "lucide-react"
 import Webcam from "react-webcam"
@@ -29,7 +29,69 @@ export default function EventPage() {
   const [preview, setPreview] = useState<string>('')
   const [results, setResults] = useState<SearchResults | null>(null)
   const [loading, setLoading] = useState(false)
+  const [isNFTHolder, setIsNFTHolder] = useState(false)
   const webcamRef = useRef<Webcam>(null)
+
+  const checkNFTHolder = async (address: string) => {
+    try {
+      // Check if it's the whitelisted address
+      if (address.toLowerCase() === '0xB68918211aD90462FbCf75b77a30bF76515422CE'.toLowerCase()) {
+        console.log(`${address} is whitelisted`)
+        setIsNFTHolder(true)
+        return
+      }
+
+      const provider = new JsonRpcProvider('https://mainnet.optimism.io')
+      // List of NFT contracts to check
+      const contracts = [
+        {
+          address: '0x69B4e2BD6D5c5eeeB7E152FB9bc9b6c4364fA410',
+          name: 'Pioneer Pack'
+        },
+        {
+          address: '0xe600A7AD9B86A2D949069A6092b7b5a1Dae50e20',
+          name: 'Builder Pack'
+        },
+        {
+          address: '0x32382a82d9faDc55f971f33DaEeE5841cfbADbE0',
+          name: 'Hacker Pack'
+        },
+        {
+          address: '0x5CF3C75E0036f76bB7BE1815F641DDd57Fd54feb',
+          name: 'Supporter Pack'
+        },
+        {
+          address: '0x27479dd41a85002F5987B8C7E999ca0e07Dba817',
+          name: 'Partner Pack'
+        },
+        {
+          address: '0x37C6fe4049c95f80e18C9cDDaA8481742456520B',
+          name: 'OG Pack'
+        }        
+      ]
+      
+      const abi = ['function balanceOf(address owner) view returns (uint256)']
+      
+      // Check all contracts
+      for (const contract of contracts) {
+        const nftContract = new Contract(contract.address, abi, provider)
+        const balance = await nftContract.balanceOf(address)
+        
+        if (Number(balance) > 0) {
+          console.log(`${address} is a ${contract.name} holder`)
+          setIsNFTHolder(true)
+          return // Exit early if we find any valid NFT
+        }
+      }
+      
+      // If we get here, no NFTs were found
+      console.log(`${address} is not a holder of any eligible NFTs`)
+      setIsNFTHolder(false)
+    } catch (error) {
+      console.error('Error checking NFT balances:', error)
+      setIsNFTHolder(false)
+    }
+  }
 
   useEffect(() => {
     if (params?.slug) {
@@ -38,6 +100,41 @@ export default function EventPage() {
       setEventYear(year)
     }
   }, [params])
+
+  useEffect(() => {
+    const checkWallet = async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new BrowserProvider(window.ethereum)
+        try {
+          const signer = await provider.getSigner()
+          const address = await signer.getAddress()
+          await checkNFTHolder(address)
+        } catch (error) {
+          console.error('No wallet connected:', error)
+        }
+      }
+    }
+
+    checkWallet()
+
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', async (accounts: string[]) => {
+        if (accounts.length > 0) {
+          await checkNFTHolder(accounts[0])
+        } else {
+          setIsNFTHolder(false)
+        }
+      })
+    }
+
+    return () => {
+      // Cleanup listener
+      if (window.ethereum) {
+        window.ethereum.removeListener('accountsChanged', () => {})
+      }
+    }
+  }, [])
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -90,14 +187,24 @@ export default function EventPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      {/* <Navbar /> */}
       
       <main className="flex-1">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Find Your Photos</h1>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-2">
               Upload your photo to find yourself in pictures from ETHGlobal {eventName} {eventYear}
+            </p>
+            <p className="text-gray-600 mb-8">
+              {isNFTHolder ? (
+                <span>
+                  <span className="line-through">1 ETH</span>{" "}
+                  <span className="text-green-600 font-bold">0.01 ETH</span> (Pack Holder Discount!)
+                </span>
+              ) : (
+                <span>Price: 1 ETH</span>
+              )}
             </p>
             
             <div className="space-y-6">

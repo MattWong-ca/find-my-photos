@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import { Navbar } from "../../components/Navbar"
+// import { Navbar } from "../../components/Navbar"
 
 const events = [
   { 
@@ -44,7 +44,7 @@ const events = [
 export default function EventsPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      {/* <Navbar /> */}
       
       <main className="flex-1">
         <div className="container mx-auto px-4 py-12">
