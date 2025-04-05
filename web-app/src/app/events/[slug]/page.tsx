@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Camera, Upload, Loader2 } from "lucide-react"
 import Webcam from "react-webcam"
 
-const CONTRACT_ADDRESS = "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
+const CONTRACT_ADDRESS = "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e" // "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
 
 interface FaceMatch {
   Face: {
