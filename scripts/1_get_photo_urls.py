@@ -62,7 +62,7 @@ def get_high_res_photo_url(api_key, photo_id):
             return size["source"]
     return sizes[-1]["source"] if sizes else None
 
-def save_urls_to_file(urls, filename="photos_brussels.txt"):
+def save_urls_to_file(urls, filename="photos_sydney.txt"):
     """
     Save URLs to a file, one per line
     """
@@ -80,10 +80,11 @@ if __name__ == "__main__":
     SAN_FRANCISCO_PHOTOSET_ID = "72177720321452115"
     SINGAPORE_PHOTOSET_ID = "72177720320579656"
     BRUSSELS_PHOTOSET_ID = "72177720319012445"
+    SYDNEY_PHOTOSET_ID = "72177720316726166"
 
     # Step 1: Fetch all photos in the album
     print("Fetching photos from album...")
-    album_photos = get_album_photos(API_KEY, USER_ID, BRUSSELS_PHOTOSET_ID)
+    album_photos = get_album_photos(API_KEY, USER_ID, SYDNEY_PHOTOSET_ID)
     print(f"Found {len(album_photos)} photos in the album.")
 
     # Step 2: Get high-res URLs for all photos
@@ -98,4 +99,4 @@ if __name__ == "__main__":
     # Step 3: Save URLs to file
     print(f"Saving {len(urls)} URLs to file...")
     save_urls_to_file(urls)
-    print("Done! URLs have been saved to photos_brussels.txt") 
+    print("Done! URLs have been saved to photos_sydney.txt") 
