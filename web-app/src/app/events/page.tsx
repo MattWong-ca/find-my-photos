@@ -35,9 +35,9 @@ const events = [
   { 
     id: 5, 
     name: "ETHGlobal Sydney", 
-    year: "2024", 
+    year: "Coming soon!", 
     slug: "sydney-2024",
-    image: "https://i.ytimg.com/vi/WYS4V181S7g/maxresdefault.jpg"
+    image: "https://i.imgur.com/pw5agXi.jpeg"
   }
 ]
 

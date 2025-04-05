@@ -431,7 +431,7 @@ export default function EventPage() {
                                 setPreview('')
                                 setSelectedImage(null)
                                 setResults(null)
-                                setHasPaid(false)
+                                // setHasPaid(false)
                               }}
                             >
                               Retake

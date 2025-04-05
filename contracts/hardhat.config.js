@@ -22,27 +22,24 @@ module.exports = {
       url: `https://polygon-amoy.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
-    "zircuit-testnet": {
+    zircuit: {
       url: "https://garfield-testnet.zircuit.com",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     }
   },
-  // etherscan: {
-  //   apiKey: {
-  //     sepolia: process.env.ETHERSCAN_API_KEY,
-  //     baseSepolia: process.env.BASESCAN_API_KEY,
-  //     polygonMumbai: process.env.POLYGONSCAN_API_KEY,
-  //     // Add other API keys as needed
-  //   },
-  //   customChains: [
-  //     {
-  //       network: "base-sepolia",
-  //       chainId: 84532,
-  //       urls: {
-  //         apiURL: "https://api-sepolia.basescan.org/api",
-  //         browserURL: "https://sepolia.basescan.org"
-  //       }
-  //     }
-  //   ]
-  // }
+  etherscan: {
+    apiKey: {
+      zircuit: '70891A232E645807BDD2644CEFC835155D'
+    }, 
+    customChains: [
+      {
+        network: 'zircuit',
+        chainId: 48898,
+        urls: {
+          apiURL: 'https://explorer.garfield-testnet.zircuit.com/api/contractVerifyHardhat',
+          browserURL: 'https://explorer.garfield-testnet.zircuit.com/',
+        },
+      }
+    ]
+  }
 };
