@@ -1,6 +1,6 @@
 # 📸 FindMyPhotos.app
 ⚡Instantly find photos you're in from ETHGlobal events using AI facial recognition tech!
-
+<img width="1294" alt="banner" src="https://github.com/user-attachments/assets/7895adb2-b566-4959-8f72-9ebc1cc97777" />
 
 # About
 
@@ -17,6 +17,12 @@ After ETHGlobal Bangkok, a friend spent 40 minutes searching for his photos! Thi
 👤 Anons can use it to ask for removal from albums 
 
 In the future, this project can be scaled to outside of IRL ETHGlobal events too — any event, conference, or hackathon organizers can provide this service to their attendees!
+
+### Input
+<img width="1440" alt="Upload" src="https://github.com/user-attachments/assets/22e4010b-5cd0-4ac1-a139-2419692b711f" />
+
+### Result
+<img width="1435" alt="Results" src="https://github.com/user-attachments/assets/f1f45dda-a296-4166-a718-3c2d07de4d08" />
 
 # How it's built
 
