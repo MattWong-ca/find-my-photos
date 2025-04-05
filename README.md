@@ -32,7 +32,7 @@ APIs: Flickr API, AWS Rekognition
 <br/>
 Blockchain: Flow, Polygon, Zircuit, Ethers, Hardhat, Alchemy, ETHGlobal NFT Packs
 
-1. Use the Flickr API to find the album IDs of ETHGlobal events, then use the album ID to retrieve the list of HD photos. Photos are stored as URLs in a txt file
+1. Use the Flickr API to retrieve a list of HD photos from ETHGlobal album URLs. Photos are stored as img URLs in a txt file
 2. Iterate through the txt file to index each face in a photo, and then upload each as a vector to an AWS collection
 3. Set up AWS Rekognition on the frontend so users can upload images, and the backend will obtain the vector of their image to compare with the list in the AWS collection
 4. Solidity smart contracts are used for token-gating the UX and the payments flow
