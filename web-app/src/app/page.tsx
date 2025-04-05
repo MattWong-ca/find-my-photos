@@ -59,12 +59,12 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <div className="flex justify-center lg:justify-end">
+              <div>
                 <Image
-                  src="/placeholder.svg?height=500&width=500"
+                  src="/landing.png"
                   alt="Hero Image"
-                  width={500}
-                  height={500}
+                  width={5000}
+                  height={5000}
                   className="rounded-lg object-cover"
                   priority
                 />
