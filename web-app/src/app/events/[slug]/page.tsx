@@ -9,6 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Camera, Upload, Loader2 } from "lucide-react"
 import Webcam from "react-webcam"
 
+// Contract config
+const CONTRACT_ADDRESS = "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
+
 interface FaceMatch {
   Face: {
     FaceId: string
@@ -30,6 +33,7 @@ export default function EventPage() {
   const [results, setResults] = useState<SearchResults | null>(null)
   const [loading, setLoading] = useState(false)
   const [isNFTHolder, setIsNFTHolder] = useState(false)
+  const [hasPaid, setHasPaid] = useState(false)
   const webcamRef = useRef<Webcam>(null)
 
   const checkNFTHolder = async (address: string) => {
@@ -185,6 +189,38 @@ export default function EventPage() {
     }
   }
 
+  const handlePayment = async () => {
+    if (typeof window.ethereum === 'undefined') {
+      alert('Please install MetaMask!')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const provider = new BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
+      const contract = new Contract(CONTRACT_ADDRESS, [
+        "function payForSearch() public payable"
+      ], signer)
+
+      // Make payment based on NFT holder status
+      const tx = await contract.payForSearch({
+        value: isNFTHolder ? 
+          BigInt("10000000000000000") // 0.01 ETH for NFT holders
+          : BigInt("1000000000000000000") // 1 ETH for non-holders
+      })
+      
+      // Wait for payment confirmation
+      await tx.wait()
+      setHasPaid(true)
+    } catch (error) {
+      console.error('Payment error:', error)
+      alert('Error processing payment. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* <Navbar /> */}
@@ -207,156 +243,173 @@ export default function EventPage() {
               )}
             </p>
             
-            <div className="space-y-6">
-              <Tabs defaultValue="upload" className="w-full max-w-md mx-auto">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="upload" className="flex items-center gap-2">
-                    <Upload className="w-4 h-4" />
-                    Upload
-                  </TabsTrigger>
-                  <TabsTrigger value="camera" className="flex items-center gap-2">
-                    <Camera className="w-4 h-4" />
-                    Camera
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="upload" className="mt-4">
-                  <div className="flex flex-col items-center gap-4">
-                    {!preview ? (
-                      <>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                          id="photo-upload"
-                        />
-                        <label htmlFor="photo-upload">
-                          <Button size="lg" asChild>
-                            <span>Choose Photo</span>
-                          </Button>
-                        </label>
-                      </>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="relative w-64 h-64 mx-auto">
-                          <Image
-                            src={preview}
-                            alt="Preview"
-                            fill
-                            className="object-contain rounded-lg"
+            {!hasPaid ? (
+              <Button 
+                size="lg" 
+                onClick={handlePayment}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Pay to Search'
+                )}
+              </Button>
+            ) : (
+              <div className="space-y-6">
+                <Tabs defaultValue="upload" className="w-full max-w-md mx-auto">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload" className="flex items-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      Upload
+                    </TabsTrigger>
+                    <TabsTrigger value="camera" className="flex items-center gap-2">
+                      <Camera className="w-4 h-4" />
+                      Camera
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="upload" className="mt-4">
+                    <div className="flex flex-col items-center gap-4">
+                      {!preview ? (
+                        <>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                            id="photo-upload"
                           />
+                          <label htmlFor="photo-upload">
+                            <Button size="lg" asChild>
+                              <span>Choose Photo</span>
+                            </Button>
+                          </label>
+                        </>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="relative w-64 h-64 mx-auto">
+                            <Image
+                              src={preview}
+                              alt="Preview"
+                              fill
+                              className="object-contain rounded-lg"
+                            />
+                          </div>
+                          <div className="flex gap-2 justify-center">
+                            <Button
+                              variant="destructive"
+                              onClick={() => {
+                                setPreview('')
+                                setSelectedImage(null)
+                                setResults(null)
+                              }}
+                            >
+                              Retake
+                            </Button>
+                            <Button
+                              onClick={handleSearch}
+                              disabled={loading}
+                            >
+                              {loading ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  Searching...
+                                </>
+                              ) : (
+                                'Find Photos'
+                              )}
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex gap-2 justify-center">
-                          <Button
-                            variant="destructive"
-                            onClick={() => {
-                              setPreview('')
-                              setSelectedImage(null)
-                              setResults(null)
-                            }}
-                          >
-                            Retake
-                          </Button>
-                          <Button
-                            onClick={handleSearch}
-                            disabled={loading}
-                          >
-                            {loading ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Searching...
-                              </>
-                            ) : (
-                              'Find Photos'
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </TabsContent>
-                <TabsContent value="camera" className="mt-4">
-                  <div className="flex flex-col items-center gap-4">
-                    {!preview ? (
-                      <div className="space-y-4">
-                        <Webcam
-                          ref={webcamRef}
-                          screenshotFormat="image/jpeg"
-                          className="w-64 h-64 rounded-lg border"
-                          mirrored={true}
-                        />
-                        <Button size="lg" onClick={handleCapture}>
-                          Take Photo
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="relative w-64 h-64 mx-auto">
-                          <Image
-                            src={preview}
-                            alt="Preview"
-                            fill
-                            className="object-contain rounded-lg"
+                      )}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="camera" className="mt-4">
+                    <div className="flex flex-col items-center gap-4">
+                      {!preview ? (
+                        <div className="space-y-4">
+                          <Webcam
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                            className="w-64 h-64 rounded-lg border"
+                            mirrored={true}
                           />
-                        </div>
-                        <div className="flex gap-2 justify-center">
-                          <Button
-                            variant="destructive"
-                            onClick={() => {
-                              setPreview('')
-                              setSelectedImage(null)
-                              setResults(null)
-                            }}
-                          >
-                            Retake
-                          </Button>
-                          <Button
-                            onClick={handleSearch}
-                            disabled={loading}
-                          >
-                            {loading ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Searching...
-                              </>
-                            ) : (
-                              'Find Photos'
-                            )}
+                          <Button size="lg" onClick={handleCapture}>
+                            Take Photo
                           </Button>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="relative w-64 h-64 mx-auto">
+                            <Image
+                              src={preview}
+                              alt="Preview"
+                              fill
+                              className="object-contain rounded-lg"
+                            />
+                          </div>
+                          <div className="flex gap-2 justify-center">
+                            <Button
+                              variant="destructive"
+                              onClick={() => {
+                                setPreview('')
+                                setSelectedImage(null)
+                                setResults(null)
+                              }}
+                            >
+                              Retake
+                            </Button>
+                            <Button
+                              onClick={handleSearch}
+                              disabled={loading}
+                            >
+                              {loading ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  Searching...
+                                </>
+                              ) : (
+                                'Find Photos'
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
 
-              {results && (
-                <div className="mt-8">
-                  <h2 className="text-2xl font-semibold mb-4">Found Photos</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {results.FaceMatches?.map((match: FaceMatch, index: number) => (
-                      <div key={match.Face.FaceId} className="border rounded-lg p-4">
-                        <div className="relative aspect-video w-full mb-2">
-                          <Image
-                            src={`https://live.staticflickr.com/65535/${match.Face.ExternalImageId}`}
-                            alt={`Matched face ${index + 1}`}
-                            fill
-                            className="object-cover rounded-lg"
-                          />
+                {results && (
+                  <div className="mt-8">
+                    <h2 className="text-2xl font-semibold mb-4">Found Photos</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {results.FaceMatches?.map((match: FaceMatch, index: number) => (
+                        <div key={match.Face.FaceId} className="border rounded-lg p-4">
+                          <div className="relative aspect-video w-full mb-2">
+                            <Image
+                              src={`https://live.staticflickr.com/65535/${match.Face.ExternalImageId}`}
+                              alt={`Matched face ${index + 1}`}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {match.Similarity.toFixed(1)}% match
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600">
-                          {match.Similarity.toFixed(1)}% match
-                        </p>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
+                )}
+                
+                <div className="text-sm text-gray-500">
+                  We&apos;ll scan all photos from this event to find matches
                 </div>
-              )}
-              
-              <div className="text-sm text-gray-500">
-                We&apos;ll scan all photos from this event to find matches
               </div>
-            </div>
+            )}
           </div>
         </div>
       </main>
