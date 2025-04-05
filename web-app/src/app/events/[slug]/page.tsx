@@ -6,10 +6,11 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { BrowserProvider, JsonRpcProvider, Contract } from "ethers"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Camera, Upload, Loader2 } from "lucide-react"
+import { Camera, Upload, Loader2, Download } from "lucide-react"
 import Webcam from "react-webcam"
 
-const CONTRACT_ADDRESS = "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e" // "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
+// const CONTRACT_ADDRESS = "0xf46E84BDA472F1C9bA77017cCc97FD7a710A872e" // "0x16C31f51D2648f5942DeC7d779369aA09A72d827" // PhotoFinder2 address
+const CONTRACT_ADDRESS = "0x16C31f51D2648f5942DeC7d779369aA09A72d827"
 
 interface FaceMatch {
   Face: {
@@ -70,23 +71,23 @@ export default function EventPage() {
         {
           address: '0x37C6fe4049c95f80e18C9cDDaA8481742456520B',
           name: 'OG Pack'
-        }        
+        }
       ]
-      
+
       const abi = ['function balanceOf(address owner) view returns (uint256)']
-      
+
       // Check all contracts
       for (const contract of contracts) {
         const nftContract = new Contract(contract.address, abi, provider)
         const balance = await nftContract.balanceOf(address)
-        
+
         if (Number(balance) > 0) {
           console.log(`${address} is a ${contract.name} holder`)
           setIsNFTHolder(true)
           return // Exit early if we find any valid NFT
         }
       }
-      
+
       // If we get here, no NFTs were found
       console.log(`${address} is not a holder of any eligible NFTs`)
       setIsNFTHolder(false)
@@ -134,7 +135,7 @@ export default function EventPage() {
     return () => {
       // Cleanup listener
       if (window.ethereum) {
-        window.ethereum.removeListener('accountsChanged', () => {})
+        window.ethereum.removeListener('accountsChanged', () => { })
       }
     }
   }, [])
@@ -204,11 +205,11 @@ export default function EventPage() {
 
       // Make payment based on NFT holder status
       const tx = await contract.payForSearch({
-        value: isNFTHolder ? 
+        value: isNFTHolder ?
           BigInt("10000000000000000") // 0.01 ETH for NFT holders
           : BigInt("1000000000000000000") // 1 ETH for non-holders
       })
-      
+
       // Wait for payment confirmation
       await tx.wait()
       setHasPaid(true)
@@ -220,10 +221,49 @@ export default function EventPage() {
     }
   }
 
+  const handleDownload = async (imageId: string) => {
+    try {
+      const response = await fetch(`https://live.staticflickr.com/65535/${imageId}`)
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `ethglobal-${eventName}-${eventYear}-${imageId}.jpg`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Error downloading image:', error)
+    }
+  }
+
+  const handleDownloadAll = async () => {
+    if (!results?.FaceMatches) return
+    setLoading(true)
+    try {
+      for (const match of results.FaceMatches) {
+        await handleDownload(match.Face.ExternalImageId)
+        // Small delay to prevent overwhelming the browser
+        await new Promise(resolve => setTimeout(resolve, 500))
+      }
+    } catch (error) {
+      console.error('Error downloading all images:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleShare = () => {
+    const tweetText = `Just found my @ethglobal ${eventName} photos using FindMyPhotos(.)app! 📸\n\n<PASTE DOWNLOADED PHOTO HERE>`
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
+    window.open(tweetUrl, '_blank')
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* <Navbar /> */}
-      
+
       <main className="flex-1">
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-4xl mx-auto text-center">
@@ -241,10 +281,10 @@ export default function EventPage() {
                 <span>Price: 1 ETH</span>
               )}
             </p>
-            
+
             {!hasPaid ? (
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handlePayment}
                 disabled={loading}
               >
@@ -383,7 +423,26 @@ export default function EventPage() {
 
                 {results && (
                   <div className="mt-8">
-                    <h2 className="text-2xl font-semibold mb-4">Found Photos</h2>
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-2xl font-semibold">Found Photos</h2>
+                      <Button
+                        onClick={handleDownloadAll}
+                        disabled={loading || !results.FaceMatches?.length}
+                        className="flex items-center gap-2"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="h-4 w-4" />
+                            Download All
+                          </>
+                        )}
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {results.FaceMatches?.map((match: FaceMatch, index: number) => (
                         <div key={match.Face.FaceId} className="border rounded-lg p-4">
@@ -395,15 +454,40 @@ export default function EventPage() {
                               className="object-cover rounded-lg"
                             />
                           </div>
-                          <p className="text-sm text-gray-600">
-                            {match.Similarity.toFixed(1)}% match
-                          </p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">
+                              {match.Similarity.toFixed(1)}% match
+                            </span>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDownload(match.Face.ExternalImageId)}
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleShare}
+                              >
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  className="h-4 w-4"
+                                  aria-hidden="true"
+                                  fill="currentColor"
+                                >
+                                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                </svg>
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                
+
                 <div className="text-sm text-gray-500">
                   We&apos;ll scan all photos from this event to find matches
                 </div>
