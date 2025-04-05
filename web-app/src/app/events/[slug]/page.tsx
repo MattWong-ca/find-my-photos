@@ -153,12 +153,33 @@ export default function EventPage() {
   }
 
   const handleCapture = useCallback(() => {
-    const imageSrc = webcamRef.current?.getScreenshot()
+    const videoElement = webcamRef.current?.video
+    if (!videoElement) return
+
+    // Create a canvas element to capture the frame
+    const canvas = document.createElement('canvas')
+    canvas.width = videoElement.videoWidth
+    canvas.height = videoElement.videoHeight
+    
+    // Draw the current frame to canvas
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
+    // Flip horizontally if mirrored
+    ctx.scale(-1, 1)
+    ctx.drawImage(videoElement, -canvas.width, 0, canvas.width, canvas.height)
+    
+    // Get the image data
+    const imageSrc = canvas.toDataURL('image/jpeg', 1.0)
     if (imageSrc) {
       setPreview(imageSrc)
-      // Create a dummy file from the base64 string
-      const dummyFile = new File([imageSrc], 'webcam-capture.jpg', { type: 'image/jpeg' })
-      setSelectedImage(dummyFile)
+      // Convert base64 to file
+      fetch(imageSrc)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], 'webcam-capture.jpg', { type: 'image/jpeg' })
+          setSelectedImage(file)
+        })
     }
   }, [])
 
@@ -344,6 +365,7 @@ export default function EventPage() {
                                 setPreview('')
                                 setSelectedImage(null)
                                 setResults(null)
+                                setHasPaid(false)
                               }}
                             >
                               Retake
@@ -397,6 +419,7 @@ export default function EventPage() {
                                 setPreview('')
                                 setSelectedImage(null)
                                 setResults(null)
+                                setHasPaid(false)
                               }}
                             >
                               Retake
