@@ -9,8 +9,11 @@ Ever scroll tirelessly through a photo album just to find photos with you in the
 After ETHGlobal Bangkok, a friend spent 40 minutes searching for his photos! This inspired me to build FindMyPhotos.app, which lets you find your photos from Flickr albums in seconds.
 
 ⚡ Upload a photo / take a live pic and find results in seconds
+
 ⛓️ Gated by ETHGlobal Packs to benefit past event attendees (discount)
+
 📱 Easily download all photos and share them on X
+
 👤 Anons can use it to ask for removal from albums 
 
 In the future, this project can be scaled to outside of IRL ETHGlobal events too — any event, conference, or hackathon organizers can provide this service to their attendees!
@@ -18,7 +21,9 @@ In the future, this project can be scaled to outside of IRL ETHGlobal events too
 # How it's built
 
 Tools: v0, Cursor
+
 APIs: Flickr API, AWS Rekognition
+
 Blockchain: Flow, Polygon, Zircuit, Ethers, Hardhat, Alchemy, ETHGlobal NFT Packs
 
 1. Use the Flickr API to find the album IDs of ETHGlobal events, then use the album ID to retrieve the list of HD photos. Photos are stored as URLs in a txt file
