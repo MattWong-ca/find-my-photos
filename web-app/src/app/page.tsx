@@ -212,7 +212,7 @@ export default function Home() {
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <h3 className="text-2xl font-bold">Normies</h3>
-                    <div className="mt-4 text-4xl font-bold">$420.69</div>
+                    <div className="mt-4 text-4xl font-bold">1 ETH</div>
                     <p className="mt-2 text-gray-500 dark:text-gray-400">Those who&apos;ve never been</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
@@ -277,7 +277,7 @@ export default function Home() {
                 <CardContent className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <h3 className="text-2xl font-bold">ETHGlobal Pack Holders</h3>
-                    <div className="mt-4 text-4xl font-bold">FREE</div>
+                    <div className="mt-4 text-4xl font-bold">0.01 ETH</div>
                     <p className="mt-2 text-gray-500 dark:text-gray-400">Any past ETHGlobal event attendee</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center">
