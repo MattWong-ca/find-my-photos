@@ -271,7 +271,7 @@ export default function Home() {
                       <div>
                         <h3 className="font-semibold">{i === 1 ? "Gwen" : "Sarah"}</h3>
                         <p className="text-sm text-gray-500">
-                          {i === 1 ? "ETHGlobal Mentor" : "ETHGlobal Paris Attendee"}
+                          {i === 1 ? "ETHGlobal Mentor" : "Speaker"}
                         </p>
                         <p className="mt-2 text-gray-700 dark:text-gray-300">
                           {i === 1
