@@ -262,20 +262,20 @@ export default function Home() {
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
                       <Image
-                        src={`/placeholder.svg?height=60&width=60`}
+                        src={`https://static.vecteezy.com/system/resources/previews/007/296/447/non_2x/user-icon-in-flat-style-person-icon-client-symbol-vector.jpg`}
                         alt={`User ${i}`}
                         width={60}
                         height={60}
                         className="rounded-full"
                       />
                       <div>
-                        <h3 className="font-semibold">{i === 1 ? "Alex Johnson" : "Sarah Williams"}</h3>
+                        <h3 className="font-semibold">{i === 1 ? "Gwen" : "Sarah"}</h3>
                         <p className="text-sm text-gray-500">
-                          {i === 1 ? "ETHGlobal London Attendee" : "ETHGlobal Paris Speaker"}
+                          {i === 1 ? "ETHGlobal Mentor" : "ETHGlobal Paris Attendee"}
                         </p>
                         <p className="mt-2 text-gray-700 dark:text-gray-300">
                           {i === 1
-                            ? "I found over 20 photos of myself that I didn't know existed! The app is incredibly fast and accurate."
+                            ? "A very useful app to find all your photos, I'm spending at least half a day after every event searching through photos to find mine. This app is a life saver!"
                             : "As a speaker, I was too busy to take photos. FindMyPhotos.app helped me discover all the moments I missed. Incredible service!"}
                         </p>
                       </div>
