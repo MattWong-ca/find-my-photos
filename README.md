@@ -1,5 +1,9 @@
 # 📸 FindMyPhotos.app
 ⚡Instantly find photos you're in from ETHGlobal events using AI facial recognition tech!
+
+- 🥇 Most Killer App Potential 1st place - Flow
+- 🥇 Best Project - Zircuit
+- 🥇 Real World Anything - Polygon
 <img width="1294" alt="banner" src="https://github.com/user-attachments/assets/7895adb2-b566-4959-8f72-9ebc1cc97777" />
 
 # About
