@@ -1,39 +1,45 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-// import { Navbar } from "../../components/Navbar"
 
 const events = [
+  {
+    id: 1,
+    name: "ETHGlobal Taipei",
+    year: "2025",
+    slug: "taipei-2025",
+    image: "https://media.licdn.com/dms/image/v2/D4D22AQEItWRj1OowOQ/feedshare-shrink_800/B4DZZM.nYHHwAg-/0/1745048214415?e=2147483647&v=beta&t=UiL1XVitlbWD8p5S4OftL4d25DLJIDhJ1hkJkxYIohc"
+  },
   { 
-    id: 1, 
+    id: 2, 
     name: "ETHGlobal Bangkok", 
     year: "2024", 
     slug: "bangkok-2024",
     image: "https://i.ytimg.com/vi/WYS4V181S7g/maxresdefault.jpg"
   },
   { 
-    id: 2, 
+    id: 3, 
     name: "ETHGlobal SF", 
     year: "2024", 
     slug: "sf-2024",
     image: "https://i.imgur.com/0KddMdj.jpeg"
   },
   { 
-    id: 3, 
+    id: 4, 
     name: "ETHGlobal Singapore", 
     year: "2024", 
     slug: "singapore-2024",
     image: "https://i.ytimg.com/vi/zwwyBTOO-NM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLA3MmJmGXVxlV5i1eivhTrcDPDeKw"
   },
   { 
-    id: 4, 
+    id: 5, 
     name: "ETHGlobal Brussels", 
     year: "2024", 
     slug: "brussels-2024",
     image: "https://miro.medium.com/v2/resize:fit:1600/1*31T3DlAEZumtGqX06wccRg.jpeg"
   },
   { 
-    id: 5, 
+    id: 6, 
     name: "ETHGlobal Sydney", 
     year: "Coming soon!", 
     slug: "sydney-2024",

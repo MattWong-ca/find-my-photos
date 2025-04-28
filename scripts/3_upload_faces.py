@@ -73,7 +73,7 @@ def process_single_face(args):
         print(f"Row {row_num}: Error processing {external_id}: {str(e)}")
         return False
 
-def add_faces_from_file(collection_id, start_row=1, urls_file="photos_singapore.txt"):
+def add_faces_from_file(collection_id, start_row=1, urls_file="photos_taipei.txt"):
     """Read URLs from file and process in parallel"""
     try:
         # Read URLs from file
@@ -119,7 +119,7 @@ def add_faces_from_file(collection_id, start_row=1, urls_file="photos_singapore.
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 3_upload_faces.py <collection_id>")
-        print("Example: python3 3_upload_faces.py singapore-2024")
+        print("Example: python3 3_upload_faces.py taipei-2025")
         sys.exit(1)
     
     collection_id = sys.argv[1]

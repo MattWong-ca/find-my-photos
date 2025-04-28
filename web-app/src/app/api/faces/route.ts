@@ -1,18 +1,31 @@
 import { NextResponse } from 'next/server';
 import AWS from 'aws-sdk';
 
-// Configure AWS
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_DEFAULT_REGION
-});
+// Map events to their corresponding AWS regions
+const EVENT_REGIONS: { [key: string]: string } = {
+  'sf-2024': 'ap-northeast-1',
+  'bangkok-2024': 'ap-northeast-1',
+  'singapore-2024': 'ap-northeast-1',
+  'brussels-2024': 'ap-northeast-1',
+  'sydney-2024': 'ap-northeast-1',
+  'taipei-2025': 'ap-southeast-1',
+};
 
-const rekognition = new AWS.Rekognition();
+// Configure AWS with dynamic region
+const getRekognitionClient = (collectionId: string) => {
+  const region = EVENT_REGIONS[collectionId] || process.env.AWS_DEFAULT_REGION;
+  
+  return new AWS.Rekognition({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region
+  });
+};
 
 export async function POST(request: Request) {
   try {
     const { action, collectionId, image, externalImageId } = await request.json();
+    const rekognition = getRekognitionClient(collectionId);
 
     switch (action) {
       case 'add':
@@ -27,7 +40,6 @@ export async function POST(request: Request) {
         const searchResponse = await rekognition.searchFacesByImage({
           CollectionId: collectionId,
           Image: { Bytes: Buffer.from(image, 'base64') },
-        //   MaxFaces: 5,
           FaceMatchThreshold: 85
         }).promise();
         return NextResponse.json(searchResponse);
