@@ -6,6 +6,7 @@
 - 🥇 Real World Anything - Polygon
 
 ETHGlobal showcase: https://ethglobal.com/showcase/findmyphotos-app-bg143
+
 YouTube demo: https://youtu.be/ZKlZ3A254sc
 
 <img width="1294" alt="banner" src="https://github.com/user-attachments/assets/7895adb2-b566-4959-8f72-9ebc1cc97777" />
