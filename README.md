@@ -4,6 +4,9 @@
 - 🥇 Most Killer App Potential 1st place - Flow
 - 🥇 Best Project - Zircuit
 - 🥇 Real World Anything - Polygon
+
+ETHGlobal showcase: https://ethglobal.com/showcase/findmyphotos-app-bg143
+
 <img width="1294" alt="banner" src="https://github.com/user-attachments/assets/7895adb2-b566-4959-8f72-9ebc1cc97777" />
 
 # About
