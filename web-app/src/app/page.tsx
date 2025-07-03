@@ -147,6 +147,18 @@ export default function Home() {
                 <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
                   ⚡Instantly find photos you&apos;re in from ETHGlobal events using AI facial recognition tech
                 </p>
+                <p className="max-w-[600px] text-red-500 md:text-lg dark:text-red-400">
+                  <strong>NOTE:</strong> this project is on pause, check out this{' '}
+                  <a 
+                    href="https://ethglobal.com/showcase/findmyphotos-app-bg143" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline hover:text-red-600 dark:hover:text-red-300"
+                  >
+                    link
+                  </a>{' '}
+                  for a demo!
+                </p>
                 <div>
                   <Link href="/events">
                     <Button size="lg" className="mt-4">
